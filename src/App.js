@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import allMovies from "./data"
+import { useState, useEffect } from "react"
 
-function App() {
+export const App = () => {
+
+ const [searchingText,setSearchingText]=useState("")
+ const [filteredMovies,setFilteredMovies] =useState([])
+
+ useEffect(()=>{
+
+const moviesAfterFilter = allMovies.filter((oneMovie)=>{
+  return oneMovie.title.toLocaleLowerCase().includes(searchingText.toLocaleLowerCase())
+})
+setFilteredMovies(moviesAfterFilter)
+
+ },[searchingText])
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <div className="movies-box">
+ <form>
+  <input type="text" placeholder="Hledaný text" onChange={
+    (e)=> setSearchingText (e.target.value)}/>
+ </form>
+    <div className="all-movies">
+      {
+        filteredMovies.map((oneMovie)=>{
+          const {id, image, title, age, tags, description} =oneMovie
 
-export default App;
+          return <div key={id} className="one-movie">
+               <img src={image}/>
+               <h2>{title}</h2>
+               <p>{age}</p>
+               <p>{tags}</p>
+          </div>
+
+        })
+      }
+    </div>
+
+    </div>
+  )
+}
+export default App
